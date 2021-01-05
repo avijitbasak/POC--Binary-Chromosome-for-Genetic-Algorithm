@@ -5,9 +5,14 @@ import java.util.List;
 
 import org.apache.commons.math3.genetics.AbstractListChromosome;
 import org.apache.commons.math3.genetics.InvalidRepresentationException;
-import org.genetic.simulation.model.fitness.Function1FitnessCalculator;
-import org.genetic.simulation.model.mutation.BinaryMutationPolicy;
 
+/**
+ * This class represents a metadata based optimum implementation of Binary
+ * chromosome.
+ * 
+ * @author AvijitBasak
+ *
+ */
 public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 
 	private FitnessCalculator fitnessCalculator;
@@ -28,14 +33,6 @@ public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 		this.fitnessCalculator = fitnessCalculator;
 	}
 
-	public static void main(String[] args) {
-		SimulationBinaryChromosome chromosome = new SimulationBinaryChromosome(120, new Function1FitnessCalculator(), .5);
-		System.out.println(chromosome.getStringRepresentation());
-		BinaryMutationPolicy binaryMutationPolicy = new BinaryMutationPolicy(.05);
-		System.out.println("After Mutation");
-		System.out.println(binaryMutationPolicy.mutate(chromosome).toString());
-	}
-
 	public static List<Long> randomBinaryRepresentation(int length, double setProbability) {
 		List<Long> rList = new ArrayList<>();
 		rList.add(Long.valueOf(length));
@@ -46,8 +43,8 @@ public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 		int bitCount = (int) (length < BLOCKSIZE ? BLOCKSIZE - length : BLOCKSIZE - length % BLOCKSIZE);
 
 		/*
-		 * This block of code stores the generated string representation of chromosome
-		 * to the list of longs in big endian order.
+		 * This block of code stores the generated string representation of
+		 * chromosome to the list of longs in big endian order.
 		 */
 		for (int j = 0; j < length; j++) {
 			double value = Math.random();

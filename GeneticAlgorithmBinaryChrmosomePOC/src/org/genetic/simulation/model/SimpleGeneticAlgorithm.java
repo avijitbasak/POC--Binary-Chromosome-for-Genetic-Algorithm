@@ -19,7 +19,6 @@ public class SimpleGeneticAlgorithm extends GeneticAlgorithm {
 	public Population nextGeneration(Population current) {
 		SimulationPopulation nextGeneration = (SimulationPopulation) current.nextGeneration();
 
-		// System.out.println("size : " + nextGeneration.getPopulationSize());
 		RandomGenerator randGen = getRandomGenerator();
 
 		while (nextGeneration.getPopulationSize() < nextGeneration.getPopulationLimit()) {

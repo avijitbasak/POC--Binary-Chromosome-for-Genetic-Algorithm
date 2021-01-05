@@ -12,16 +12,16 @@ import org.genetic.simulation.model.SimulationBinaryChromosome;
 import org.genetic.simulation.model.SimulationPopulation;
 import org.genetic.simulation.model.SimulationStoppingCondition;
 import org.genetic.simulation.model.crossover.OnePointBinaryCrossoverPolicy;
-import org.genetic.simulation.model.fitness.Function1FitnessCalculator;
+import org.genetic.simulation.model.fitness.Function7FitnessCalculator;
 import org.genetic.simulation.model.mutation.BinaryMutationPolicy;
 
-public class F1GeneticAdaptiveMutationProbabilitySimulation {
+public class Function7SGASimulation {
 
 	private static final int POPULATION_SIZE = 10;
 
 	private static final int TOURNAMENT_SIZE = 2;
 
-	private static final int CHROMOZOME_LENGTH = 30;
+	private static final int CHROMOZOME_LENGTH = 24;
 
 	private static final double CROSSOVER_RATE = 1.0;
 
@@ -31,7 +31,7 @@ public class F1GeneticAdaptiveMutationProbabilitySimulation {
 
 	private static final double PROBABILITY_OF_GENERATING_ONE = 0.75;
 
-	private static final String IMAGE_FILE_PATH = "reports\\F1_Optimization.jpeg";
+	private static final String IMAGE_FILE_PATH = "reports\\F7_Optimization.jpeg";
 
 	public static void main(String[] args) {
 		try {
@@ -39,15 +39,14 @@ public class F1GeneticAdaptiveMutationProbabilitySimulation {
 					"cost");
 			SimulationPopulation initPopulation = getInitialPopulation();
 
-			F1GeneticAdaptiveMutationProbabilitySimulation simulation = new F1GeneticAdaptiveMutationProbabilitySimulation();
+			Function7SGASimulation simulation = new Function7SGASimulation();
 
-			simulation.optimize(initPopulation, AVERAGE_MUTATION_RATE, fitnessSimulationGraphPlotter,
-					"SGAOptimization");
+			simulation.optimizeSGA(initPopulation, AVERAGE_MUTATION_RATE, fitnessSimulationGraphPlotter,
+					"SGAAdaptiveOptimization");
 
 			Thread.sleep(5000);
 
 			fitnessSimulationGraphPlotter.saveAsImage(IMAGE_FILE_PATH);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -55,12 +54,12 @@ public class F1GeneticAdaptiveMutationProbabilitySimulation {
 		}
 	}
 
-	public void optimize(Population initial, double mutationProbability, GraphPlotter graphPlotter,
+	public void optimizeSGA(Population initial, double avgMutationProbability, GraphPlotter graphPlotter,
 			String graphLabel) throws IOException {
 
 		// initialize a new genetic algorithm
 		GeneticAlgorithm ga = new SimpleGeneticAlgorithm(new OnePointBinaryCrossoverPolicy(), CROSSOVER_RATE,
-				new BinaryMutationPolicy(mutationProbability), mutationProbability, TOURNAMENT_SIZE);
+				new BinaryMutationPolicy(avgMutationProbability), avgMutationProbability, TOURNAMENT_SIZE);
 
 		// stopping condition
 		StoppingCondition stopCond = new SimulationStoppingCondition(graphPlotter, graphLabel);
@@ -77,20 +76,33 @@ public class F1GeneticAdaptiveMutationProbabilitySimulation {
 		System.out.println("***********Optimization Result***************");
 		System.out.println("*********************************************");
 
-		System.out.println(bestFinal.toString());
-		System.out.printf("Best Fitness: %.6f", fitness);
+		System.out.println(bestFinal.toString() + ":: (" + getX((SimulationBinaryChromosome) bestFinal) + ", "
+				+ getY((SimulationBinaryChromosome) bestFinal) + ")");
+		System.out.println("Best Fitness: " + fitness);
 
+	}
+
+	private double getY(SimulationBinaryChromosome chromosome) {
+		String binaryStr = chromosome.getStringRepresentation();
+		double y = Integer.parseInt(binaryStr.substring(14, 24), 2) / 1000.0;
+		return y;
 	}
 
 	private static SimulationPopulation getInitialPopulation() {
 		SimulationPopulation simulationPopulation = new SimulationPopulation(POPULATION_SIZE, ELITISM_RATE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			simulationPopulation.addChromosome(new SimulationBinaryChromosome(CHROMOZOME_LENGTH,
-					new Function1FitnessCalculator(), PROBABILITY_OF_GENERATING_ONE));
+					new Function7FitnessCalculator(), PROBABILITY_OF_GENERATING_ONE));
 		}
 		simulationPopulation.setChromosomeRanks();
 
 		return simulationPopulation;
+	}
+
+	private double getX(SimulationBinaryChromosome chromosome) {
+		String binaryStr = chromosome.getStringRepresentation();
+		double x = Integer.parseInt(binaryStr.substring(1, 12), 2) / 1000.0;
+		return x;
 	}
 
 }

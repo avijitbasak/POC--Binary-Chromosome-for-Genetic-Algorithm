@@ -32,8 +32,8 @@ public class OnePointBinaryCrossoverPolicy implements CrossoverPolicy {
 		crossoverIndex += offset;
 
 		/*
-		 * The long is converted to int as there are limitation on number of elements
-		 * ArrayList can accommodate.
+		 * The long is converted to int as there are limitation on number of
+		 * elements ArrayList can accommodate.
 		 */
 		int blockIndex = (int) (crossoverIndex % BLOCK_SIZE == 0 ? crossoverIndex / BLOCK_SIZE
 				: crossoverIndex / BLOCK_SIZE) + 1;
@@ -42,9 +42,6 @@ public class OnePointBinaryCrossoverPolicy implements CrossoverPolicy {
 		if (blockIndex == 1) {
 			blockElementIndex -= offset;
 		}
-
-		System.out.println("blockIndex : " + blockIndex);
-		System.out.println("blockElementIndex : " + blockElementIndex);
 
 		long allelesBlock1 = representation1.get(blockIndex);
 		StringBuilder allelesBlockStr1 = new StringBuilder(Long.toBinaryString(allelesBlock1));

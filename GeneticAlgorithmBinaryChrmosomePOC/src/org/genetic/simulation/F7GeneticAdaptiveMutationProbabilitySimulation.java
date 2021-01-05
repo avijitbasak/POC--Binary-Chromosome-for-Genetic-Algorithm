@@ -31,11 +31,10 @@ public class F7GeneticAdaptiveMutationProbabilitySimulation {
 
 	private static final double PROBABILITY_OF_GENERATING_ONE = 0.75;
 
-	private static final String IMAGE_FILE_PATH = "C:\\Works\\Genetic Algorithm Work\\workspace\\GeneticAdaptiveMutationPOC\\simulation_output\\F7_Optimization.jpeg";
+	private static final String IMAGE_FILE_PATH = "reports\\F7_Optimization.jpeg";
 
 	public static void main(String[] args) {
 		try {
-			// System.setOut(new PrintStream(new File("report.txt")));
 			GraphPlotter fitnessSimulationGraphPlotter = new GraphPlotter("FitnessSimulationGraph", "generations",
 					"cost");
 			SimulationPopulation initPopulation = getInitialPopulation();
@@ -44,10 +43,6 @@ public class F7GeneticAdaptiveMutationProbabilitySimulation {
 
 			simulation.optimizeSGA(initPopulation, AVERAGE_MUTATION_RATE, fitnessSimulationGraphPlotter,
 					"SGAAdaptiveOptimization");
-
-			// simulation.optimizeRankBasedAdaptive(initPopulation, AVERAGE_MUTATION_RATE *
-			// 2,
-			// fitnessSimulationGraphPlotter, "RankBasedAGAOptimization");
 
 			Thread.sleep(5000);
 
@@ -86,45 +81,6 @@ public class F7GeneticAdaptiveMutationProbabilitySimulation {
 		System.out.println("Best Fitness: " + fitness);
 
 	}
-
-	// public void optimizeRankBasedAdaptive(Population initial, double
-	// maxMutationProbability, GraphPlotter graphPlotter,
-	// String graphLabel) throws IOException {
-	//
-	// AdaptiveMutationProbabilityGenerator mutationProbabilityGenerator = new
-	// AdaptiveRankBasedMutationProbabilityGenerator(
-	// maxMutationProbability);
-	// // initialize a new genetic algorithm
-	// GeneticAlgorithm ga = new AdaptiveGeneticAlgorithm(new
-	// OnePointCrossover<Integer>(), CROSSOVER_RATE,
-	// new AdaptiveBinaryMutationPolicy(mutationProbabilityGenerator),
-	// TOURNAMENT_SIZE);
-	//
-	// // stopping condition
-	// StoppingCondition stopCond = new SimulationStoppingCondition(graphPlotter,
-	// graphLabel);
-	//
-	// // System.out.println("Initial Fitness : "
-	// // + initial.getFittestChromosome().fitness());
-	//
-	// // run the algorithm
-	// Population finalPopulation = ga.evolve(initial, stopCond);
-	//
-	// // best chromosome from the final population
-	// Chromosome bestFinal = finalPopulation.getFittestChromosome();
-	//
-	// double fitness = bestFinal.fitness();
-	//
-	// System.out.println("*********************************************");
-	// System.out.println("***********Optimization Result***************");
-	// System.out.println("*********************************************");
-	//
-	// System.out.println(bestFinal.toString() + ":: (" +
-	// getX((SimulationBinaryChromosome) bestFinal) + ", "
-	// + getY((SimulationBinaryChromosome) bestFinal) + ")");
-	// System.out.printf("Best Fitness: %.5f", fitness);
-	//
-	// }
 
 	private double getY(SimulationBinaryChromosome chromosome) {
 		String binaryStr = chromosome.getStringRepresentation();

@@ -15,7 +15,7 @@ import org.genetic.simulation.model.crossover.OnePointBinaryCrossoverPolicy;
 import org.genetic.simulation.model.fitness.Function1FitnessCalculator;
 import org.genetic.simulation.model.mutation.BinaryMutationPolicy;
 
-public class F1GeneticAdaptiveMutationProbabilitySimulation {
+public class Function1SGASimulation {
 
 	private static final int POPULATION_SIZE = 10;
 
@@ -39,7 +39,7 @@ public class F1GeneticAdaptiveMutationProbabilitySimulation {
 					"cost");
 			SimulationPopulation initPopulation = getInitialPopulation();
 
-			F1GeneticAdaptiveMutationProbabilitySimulation simulation = new F1GeneticAdaptiveMutationProbabilitySimulation();
+			Function1SGASimulation simulation = new Function1SGASimulation();
 
 			simulation.optimize(initPopulation, AVERAGE_MUTATION_RATE, fitnessSimulationGraphPlotter,
 					"SGAOptimization");

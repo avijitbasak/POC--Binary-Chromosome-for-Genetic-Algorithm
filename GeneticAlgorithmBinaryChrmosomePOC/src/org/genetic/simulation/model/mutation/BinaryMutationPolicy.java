@@ -44,21 +44,15 @@ public class BinaryMutationPolicy implements MutationPolicy {
 			geneIndex += offset;
 
 			/*
-			 * The long is converted to int as there are limitation on number of elements
-			 * ArrayList can accommodate.
+			 * The long is converted to int as there are limitation on number of
+			 * elements ArrayList can accommodate.
 			 */
 			int blockIndex = (int) (geneIndex % BLOCK_SIZE == 0 ? geneIndex / BLOCK_SIZE : geneIndex / BLOCK_SIZE) + 1;
 			int blockElementIndex = (int) (geneIndex % BLOCK_SIZE);
-			// System.out.println("geneIndex : " + geneIndex);
-			// System.out.println("blockIndex : " + blockIndex);
-			// System.out.println("blockElementIndex : " + blockElementIndex);
 
 			if (blockIndex == 1) {
 				blockElementIndex -= offset;
 			}
-
-			System.out.println("blockIndex : " + blockIndex);
-			System.out.println("blockElementIndex : " + blockElementIndex);
 
 			long allelesBlock = newRep.get(blockIndex);
 			StringBuilder allelesBlockStr = new StringBuilder(Long.toBinaryString(allelesBlock));
@@ -66,13 +60,7 @@ public class BinaryMutationPolicy implements MutationPolicy {
 					: (BLOCK_SIZE - allelesBlockStr.length()));
 			allelesBlockStr = prependZero(allelesBlockStr.toString(), leadingZeroCount);
 
-			// System.out.println(allelesBlockStr.toString());
-
 			allelesBlockStr.insert(blockElementIndex, allelesBlockStr.charAt(blockElementIndex) == '0' ? '1' : '0');
-//			allelesBlockStr.replace(blockElementIndex, blockElementIndex + 1,
-//					Character.toString(allelesBlockStr.charAt(blockElementIndex) == '0' ? '1' : '0'));
-
-			// System.out.println(allelesBlockStr.toString());
 
 			long mutatedBlock = Long.parseLong(allelesBlockStr.toString(), 2);
 

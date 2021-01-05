@@ -1,6 +1,5 @@
 package org.genetic.simulation.model;
 
-import org.apache.commons.math3.genetics.Chromosome;
 import org.apache.commons.math3.genetics.Population;
 import org.apache.commons.math3.genetics.StoppingCondition;
 import org.genetic.simulation.graph.GraphPlotter;
@@ -19,8 +18,6 @@ public class SimulationStoppingCondition implements StoppingCondition {
 
 	private String plotName;
 
-//	private GraphPlotter skewnessPlotter;
-
 	private boolean enableGraphPlotting;
 
 	public SimulationStoppingCondition() {
@@ -29,18 +26,9 @@ public class SimulationStoppingCondition implements StoppingCondition {
 
 	public SimulationStoppingCondition(GraphPlotter fitnessSimulationGraphPlotter, String plotName) {
 		this.fitnessSimulationGraphPlotter = fitnessSimulationGraphPlotter;
-//		this.skewnessPlotter = new GraphPlotter("SkewnessPlot", "generations", "skewness");
 		this.plotName = plotName;
 		this.enableGraphPlotting = true;
 	}
-
-	// public SimulationStoppingCondition(GraphPlotter
-	// fitnessSimulationGraphPlotter, GraphPlotter skewnessPlotter,
-	// String plotName) {
-	// this.fitnessSimulationGraphPlotter = fitnessSimulationGraphPlotter;
-	// this.skewnessPlotter = skewnessPlotter;
-	// this.plotName = plotName;
-	// }
 
 	@Override
 	public boolean isSatisfied(Population population) {
@@ -49,18 +37,13 @@ public class SimulationStoppingCondition implements StoppingCondition {
 		double currentBestFitness = simulationPopulation.getFittestChromosome().fitness();
 
 		if (enableGraphPlotting) {
-			// System.out.println("Value1: " +
-			// simulationPopulation.getFitnessStats().getSkewness());
-			// System.out.println("Value2: " + calculateSkewness(simulationPopulation));
-			fitnessSimulationGraphPlotter.addDataPoint(plotName, evolutionCount, Math.abs(currentBestFitness));
-//			skewnessPlotter.addDataPoint(plotName + "-skewness", evolutionCount,
-//					calculateSkewness(simulationPopulation));
+			fitnessSimulationGraphPlotter.addDataPoint(plotName, evolutionCount,
+					Math.abs(simulationPopulation.getAverageFitness()));
 		}
 		evolutionCount++;
 
 		if (lastBestFitness == currentBestFitness) {
 			if (noOfGenerationsHavingUnchangedFitness == MAX_NO_OF_GENERATION_WITH_SAME_BEST_FITNESS - 1) {
-				// System.out.println("Evolution Count : " + evolutionCount);
 				return true;
 			} else {
 				this.noOfGenerationsHavingUnchangedFitness++;
@@ -71,21 +54,6 @@ public class SimulationStoppingCondition implements StoppingCondition {
 		}
 
 		return false;
-	}
-
-	private double calculateSkewness(SimulationPopulation population) {
-		double avgFitness = population.getFitnessStats().getMean();
-		double size = population.getPopulationSize();
-		double numerator = 0.0;
-
-		for (Chromosome chromosome : population) {
-			numerator += Math.pow((chromosome.fitness() - avgFitness), 3);
-		}
-		numerator = numerator / size;
-		double denominator = Math.pow(population.getFitnessStats().getStandardDeviation(), 3);
-		double skewness = numerator / denominator;
-
-		return skewness;
 	}
 
 	public int getEvolutionCount() {
