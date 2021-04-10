@@ -17,7 +17,7 @@ public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 
 	private FitnessCalculator fitnessCalculator;
 
-	private static final long BLOCKSIZE = 63;
+	public static final int BLOCKSIZE = 63;
 
 	private int rank;
 
@@ -34,6 +34,11 @@ public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 	}
 
 	public static List<Long> randomBinaryRepresentation(int length, double setProbability) {
+
+		if (length > Integer.MAX_VALUE * BLOCKSIZE) {
+			throw new IllegalArgumentException(
+					"Length of chromosome cannot be more than " + Integer.MAX_VALUE * BLOCKSIZE);
+		}
 		List<Long> rList = new ArrayList<>();
 		rList.add(Long.valueOf(length));
 
@@ -121,6 +126,7 @@ public class SimulationBinaryChromosome extends AbstractListChromosome<Long> {
 
 	@Override
 	public String toString() {
+		// return getStringRepresentation();
 		return getStringRepresentation() + " - " + String.format("%.6f", fitness());
 	}
 

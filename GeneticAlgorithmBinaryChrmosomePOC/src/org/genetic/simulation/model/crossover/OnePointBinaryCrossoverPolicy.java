@@ -11,8 +11,6 @@ import org.genetic.simulation.model.SimulationBinaryChromosome;
 
 public class OnePointBinaryCrossoverPolicy implements CrossoverPolicy {
 
-	private final long BLOCK_SIZE = 63;
-
 	@Override
 	public ChromosomePair crossover(Chromosome first, Chromosome second) throws MathIllegalArgumentException {
 
@@ -28,31 +26,33 @@ public class OnePointBinaryCrossoverPolicy implements CrossoverPolicy {
 		long alleleCount = representation1.get(0);
 		long crossoverIndex = (long) Math.floor((Math.random() * alleleCount));
 
-		long offset = BLOCK_SIZE - (alleleCount % BLOCK_SIZE);
-		crossoverIndex += offset;
+		int offset = (int) (SimulationBinaryChromosome.BLOCKSIZE
+				- (alleleCount % SimulationBinaryChromosome.BLOCKSIZE));
+		long offsettedCrossoverIndex = crossoverIndex + offset;
 
 		/*
 		 * The long is converted to int as there are limitation on number of
 		 * elements ArrayList can accommodate.
 		 */
-		int blockIndex = (int) (crossoverIndex % BLOCK_SIZE == 0 ? crossoverIndex / BLOCK_SIZE
-				: crossoverIndex / BLOCK_SIZE) + 1;
-		int blockElementIndex = (int) (crossoverIndex % BLOCK_SIZE);
-
-		if (blockIndex == 1) {
-			blockElementIndex -= offset;
-		}
+		int blockIndex = (int) (crossoverIndex % SimulationBinaryChromosome.BLOCKSIZE == 0
+				? crossoverIndex / SimulationBinaryChromosome.BLOCKSIZE
+				: crossoverIndex / SimulationBinaryChromosome.BLOCKSIZE) + 1;
+		int blockElementIndex = (int) ((blockIndex != 1)
+				? (offsettedCrossoverIndex % SimulationBinaryChromosome.BLOCKSIZE)
+				: (offsettedCrossoverIndex % SimulationBinaryChromosome.BLOCKSIZE - offset));
 
 		long allelesBlock1 = representation1.get(blockIndex);
 		StringBuilder allelesBlockStr1 = new StringBuilder(Long.toBinaryString(allelesBlock1));
-		int leadingZeroCount = (int) (blockIndex == 1 ? (BLOCK_SIZE - offset - allelesBlockStr1.length())
-				: (BLOCK_SIZE - allelesBlockStr1.length()));
+		int leadingZeroCount = (int) (blockIndex == 1
+				? (SimulationBinaryChromosome.BLOCKSIZE - offset - allelesBlockStr1.length())
+				: (SimulationBinaryChromosome.BLOCKSIZE - allelesBlockStr1.length()));
 		allelesBlockStr1 = prependZero(allelesBlockStr1.toString(), leadingZeroCount);
 
 		long allelesBlock2 = representation2.get(blockIndex);
 		StringBuilder allelesBlockStr2 = new StringBuilder(Long.toBinaryString(allelesBlock2));
-		leadingZeroCount = (int) (blockIndex == 1 ? (BLOCK_SIZE - offset - allelesBlockStr2.length())
-				: (BLOCK_SIZE - allelesBlockStr2.length()));
+		leadingZeroCount = (int) (blockIndex == 1
+				? (SimulationBinaryChromosome.BLOCKSIZE - offset - allelesBlockStr2.length())
+				: (SimulationBinaryChromosome.BLOCKSIZE - allelesBlockStr2.length()));
 		allelesBlockStr2 = prependZero(allelesBlockStr2.toString(), leadingZeroCount);
 
 		String allelesBlockStr1C = null;

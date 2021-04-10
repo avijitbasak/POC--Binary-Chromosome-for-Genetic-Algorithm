@@ -13,8 +13,6 @@ public class BinaryMutationPolicy implements MutationPolicy {
 
 	private double mutationProbability;
 
-	private final long BLOCK_SIZE = 63;
-
 	public BinaryMutationPolicy(double mutationProbability) {
 		this.mutationProbability = mutationProbability;
 	}
@@ -31,36 +29,28 @@ public class BinaryMutationPolicy implements MutationPolicy {
 		}
 
 		SimulationBinaryChromosome origChrom = (SimulationBinaryChromosome) original;
-		long noOfAlleleChanges = (long) Math.floor(mutationProbability * (double) origChrom.getChromosomeLength());
+		int noOfAlleleChanges = (int) Math.floor(mutationProbability * (double) origChrom.getChromosomeLength());
 
 		List<Long> oldRep = origChrom.getRepresentation();
 		List<Long> newRep = new ArrayList<Long>(oldRep);
 
 		long alleleCount = newRep.get(0);
-		for (long i = 0; i < noOfAlleleChanges; i++) {
+		int offset = (int) (SimulationBinaryChromosome.BLOCKSIZE
+				- (alleleCount % SimulationBinaryChromosome.BLOCKSIZE));
+		for (int i = 0; i < noOfAlleleChanges; i++) {
+			int geneIndex = (int) (Math.random() * alleleCount);
+			int offsettedGeneIndex = geneIndex + offset;
 
-			long geneIndex = (long) (Math.random() * alleleCount);
-			long offset = BLOCK_SIZE - (alleleCount % BLOCK_SIZE);
-			geneIndex += offset;
+			int blockIndex = (offsettedGeneIndex % SimulationBinaryChromosome.BLOCKSIZE == 0
+					? offsettedGeneIndex / SimulationBinaryChromosome.BLOCKSIZE
+					: offsettedGeneIndex / SimulationBinaryChromosome.BLOCKSIZE) + 1;
+			int blockElementIndex = (blockIndex != 1) ? (offsettedGeneIndex % SimulationBinaryChromosome.BLOCKSIZE)
+					: (offsettedGeneIndex % SimulationBinaryChromosome.BLOCKSIZE - offset);
 
-			/*
-			 * The long is converted to int as there are limitation on number of
-			 * elements ArrayList can accommodate.
-			 */
-			int blockIndex = (int) (geneIndex % BLOCK_SIZE == 0 ? geneIndex / BLOCK_SIZE : geneIndex / BLOCK_SIZE) + 1;
-			int blockElementIndex = (int) (geneIndex % BLOCK_SIZE);
+			StringBuilder allelesBlockStr = extractChromosomePart(newRep, offset, blockIndex);
 
-			if (blockIndex == 1) {
-				blockElementIndex -= offset;
-			}
-
-			long allelesBlock = newRep.get(blockIndex);
-			StringBuilder allelesBlockStr = new StringBuilder(Long.toBinaryString(allelesBlock));
-			int leadingZeroCount = (int) (blockIndex == 1 ? (BLOCK_SIZE - offset - allelesBlockStr.length())
-					: (BLOCK_SIZE - allelesBlockStr.length()));
-			allelesBlockStr = prependZero(allelesBlockStr.toString(), leadingZeroCount);
-
-			allelesBlockStr.insert(blockElementIndex, allelesBlockStr.charAt(blockElementIndex) == '0' ? '1' : '0');
+			final String replacementCharacter = allelesBlockStr.charAt(blockElementIndex) == '0' ? "1" : "0";
+			allelesBlockStr.replace(blockElementIndex, blockElementIndex + 1, replacementCharacter);
 
 			long mutatedBlock = Long.parseLong(allelesBlockStr.toString(), 2);
 
@@ -72,6 +62,15 @@ public class BinaryMutationPolicy implements MutationPolicy {
 
 		return newChrom;
 
+	}
+
+	private StringBuilder extractChromosomePart(List<Long> newRep, int offset, int blockIndex) {
+		StringBuilder allelesBlockStr = new StringBuilder(Long.toBinaryString(newRep.get(blockIndex)));
+		int leadingZeroCount = (int) (blockIndex == 1
+				? (SimulationBinaryChromosome.BLOCKSIZE - offset - allelesBlockStr.length())
+				: (SimulationBinaryChromosome.BLOCKSIZE - allelesBlockStr.length()));
+		allelesBlockStr = prependZero(allelesBlockStr.toString(), leadingZeroCount);
+		return allelesBlockStr;
 	}
 
 	private StringBuilder prependZero(String chromosomeStr, int count) {

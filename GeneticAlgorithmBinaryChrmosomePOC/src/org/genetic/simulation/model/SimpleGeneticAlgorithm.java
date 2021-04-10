@@ -21,6 +21,8 @@ public class SimpleGeneticAlgorithm extends GeneticAlgorithm {
 
 		RandomGenerator randGen = getRandomGenerator();
 
+		System.out.println(current.toString());
+		System.out.println("Average Fitness : " + nextGeneration.getAverageFitness());
 		while (nextGeneration.getPopulationSize() < nextGeneration.getPopulationLimit()) {
 			ChromosomePair pair = getSelectionPolicy().select(current);
 

@@ -38,6 +38,8 @@ public class Function1SGASimulation {
 			GraphPlotter fitnessSimulationGraphPlotter = new GraphPlotter("FitnessSimulationGraph", "generations",
 					"cost");
 			SimulationPopulation initPopulation = getInitialPopulation();
+			System.out.println("Initial population:");
+			System.out.println(initPopulation.toString());
 
 			Function1SGASimulation simulation = new Function1SGASimulation();
 
