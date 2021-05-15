@@ -1,14 +1,14 @@
 package org.genetic.simulation.model.fitness;
 
 import org.apache.commons.math3.genetics.Chromosome;
+import org.genetic.simulation.model.BinaryChromosome;
 import org.genetic.simulation.model.FitnessCalculator;
-import org.genetic.simulation.model.SimulationBinaryChromosome;
 
 public class Function1FitnessCalculator implements FitnessCalculator {
 
 	@Override
 	public double calculate(Chromosome chromosome) {
-		SimulationBinaryChromosome binaryChromosome = (SimulationBinaryChromosome) chromosome;
+		BinaryChromosome binaryChromosome = (BinaryChromosome) chromosome;
 		double value = getValue(binaryChromosome.getStringRepresentation().substring(0, 10))
 				+ getValue(binaryChromosome.getStringRepresentation().substring(10, 20))
 				+ getValue(binaryChromosome.getStringRepresentation().substring(20, 30));

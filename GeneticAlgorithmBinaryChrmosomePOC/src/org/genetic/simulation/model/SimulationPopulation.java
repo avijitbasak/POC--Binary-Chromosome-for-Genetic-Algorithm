@@ -67,7 +67,7 @@ public class SimulationPopulation extends ElitisticListPopulation {
 		List<Chromosome> chromosomes = getChromosomeList();
 		Collections.sort(chromosomes);
 		for (int i = 0; i < getPopulationSize(); i++) {
-			((SimulationBinaryChromosome) chromosomes.get(i)).setRank(i + 1);
+			((BinaryChromosome) chromosomes.get(i)).setRank(i + 1);
 		}
 	}
 
